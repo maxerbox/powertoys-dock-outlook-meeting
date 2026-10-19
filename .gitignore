@@ -1,0 +1,13 @@
+
+bin/
+obj/
+AppxPackages*/
+*.user
+*.suo
+.vs/
+*.pfx
+*.cer
+*.msix
+
+# Local Windows SDK shim (optional, for building without SDK 10.0.26100)
+localwinsdk/

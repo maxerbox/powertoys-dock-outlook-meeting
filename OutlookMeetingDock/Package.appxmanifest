@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
+  xmlns:com="http://schemas.microsoft.com/appx/manifest/com/windows10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap uap3 rescap">
+
+  <!--
+    NOTE: Publisher matches the locally-trusted self-signed dev certificate
+    CN=GoogleTrafficDock Dev (already in LocalMachine\TrustedPeople) so the
+    package installs without another elevated certificate import.
+  -->
+  <Identity
+    Name="OutlookMeetingDock"
+    Publisher="CN=GoogleTrafficDock Dev"
+    Version="1.0.0.0" />
+
+  <Properties>
+    <DisplayName>Outlook Next Meeting</DisplayName>
+    <PublisherDisplayName>GoogleTrafficDock Dev</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.19041.0" MaxVersionTested="10.0.26100.0" />
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.19041.0" MaxVersionTested="10.0.26100.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="x-generate" />
+  </Resources>
+
+  <Applications>
+    <Application Id="App"
+      Executable="$targetnametoken$.exe"
+      EntryPoint="$targetentrypoint$">
+      <uap:VisualElements
+        DisplayName="Outlook Next Meeting"
+        Description="Countdown to your next Outlook meeting, in the Command Palette and its Dock"
+        BackgroundColor="transparent"
+        Square150x150Logo="Assets\Square150x150Logo.png"
+        Square44x44Logo="Assets\Square44x44Logo.png">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" />
+        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+      </uap:VisualElements>
+      <Extensions>
+        <com:Extension Category="windows.comServer">
+          <com:ComServer>
+            <com:ExeServer Executable="OutlookMeetingDock.exe" Arguments="-RegisterProcessAsComServer" DisplayName="Outlook Next Meeting">
+              <com:Class Id="475D620A-83DC-45FB-A375-E99778CCA22F" DisplayName="Outlook Next Meeting" />
+            </com:ExeServer>
+          </com:ComServer>
+        </com:Extension>
+        <uap3:Extension Category="windows.appExtension">
+          <uap3:AppExtension Name="com.microsoft.commandpalette"
+            Id="OutlookMeetingDock"
+            PublicFolder="Public"
+            DisplayName="Outlook Next Meeting"
+            Description="Countdown to your next Outlook meeting">
+            <uap3:Properties>
+              <CmdPalProvider>
+                <Activation>
+                  <CreateInstance ClassId="475D620A-83DC-45FB-A375-E99778CCA22F" />
+                </Activation>
+                <SupportedInterfaces>
+                  <Commands/>
+                </SupportedInterfaces>
+              </CmdPalProvider>
+            </uap3:Properties>
+          </uap3:AppExtension>
+        </uap3:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+</Package>
