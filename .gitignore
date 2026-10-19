@@ -1,0 +1,13 @@
+
+bin/
+obj/
+AppxPackages*/
+*.user
+*.suo
+.vs/
+*.pfx
+*.cer
+*.msix
+
+# Local Windows SDK shim (recreate with scripts\create-winsdk-shim.ps1)
+localwinsdk/

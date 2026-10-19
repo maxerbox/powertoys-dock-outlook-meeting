@@ -1,0 +1,62 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>OutlookMeetingDock</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+
+    <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+    <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
+
+    <EnableMsixTooling>true</EnableMsixTooling>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\**\*.png" />
+  </ItemGroup>
+
+  <!--
+    Build without the Windows SDK 10.0.26100 installed: `localwinsdk` is a shim
+    SDK layout (platform props + union metadata + makepri from an older SDK,
+    version-renamed to 10.0.26100.0). Copied from the GoogleTrafficDock repo.
+  -->
+  <PropertyGroup>
+    <CsWinRTWindowsMetadata Condition="'$(CsWinRTWindowsMetadata)' == '' and Exists('$(MSBuildThisFileDirectory)..\localwinsdk\UnionMetadata\10.0.26100.0\Windows.winmd')">$(MSBuildThisFileDirectory)..\localwinsdk\UnionMetadata\10.0.26100.0</CsWinRTWindowsMetadata>
+    <TargetPlatformSdkRootOverride Condition="'$(TargetPlatformSdkRootOverride)' == '' and Exists('$(MSBuildThisFileDirectory)..\localwinsdk\Platforms\UAP\10.0.26100.0\Platform.xml')">$(MSBuildThisFileDirectory)..\localwinsdk</TargetPlatformSdkRootOverride>
+    <MakePriExeFullPath Condition="'$(MakePriExeFullPath)' == '' and Exists('$(MSBuildThisFileDirectory)..\localwinsdk\bin\10.0.26100.0\x64\makepri.exe')">$(MSBuildThisFileDirectory)..\localwinsdk\bin\10.0.26100.0\x64\makepri.exe</MakePriExeFullPath>
+    <MrmSupportLibraryPath Condition="'$(MrmSupportLibraryPath)' == '' and Exists('$(MSBuildThisFileDirectory)..\localwinsdk\bin\10.0.26100.0\x64\mrmsupport.dll')">$(MSBuildThisFileDirectory)..\localwinsdk\bin\10.0.26100.0\x64\mrmsupport.dll</MrmSupportLibraryPath>
+    <MakeAppxExeFullPath Condition="'$(MakeAppxExeFullPath)' == '' and Exists('$(MSBuildThisFileDirectory)..\localwinsdk\bin\10.0.26100.0\x64\makeappx.exe')">$(MSBuildThisFileDirectory)..\localwinsdk\bin\10.0.26100.0\x64\makeappx.exe</MakeAppxExeFullPath>
+    <SignAppxPackageExeFullPath Condition="'$(SignAppxPackageExeFullPath)' == '' and Exists('$(MSBuildThisFileDirectory)..\localwinsdk\bin\10.0.26100.0\x64\signtool.exe')">$(MSBuildThisFileDirectory)..\localwinsdk\bin\10.0.26100.0\x64\signtool.exe</SignAppxPackageExeFullPath>
+    <AppxPackagingComponentManifestPath Condition="'$(AppxPackagingComponentManifestPath)' == '' and Exists('$(MSBuildThisFileDirectory)..\localwinsdk\bin\10.0.26100.0\x64\Microsoft.Windows.Build.Appx.AppxPackaging.dll.manifest')">$(MSBuildThisFileDirectory)..\localwinsdk\bin\10.0.26100.0\x64\Microsoft.Windows.Build.Appx.AppxPackaging.dll.manifest</AppxPackagingComponentManifestPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Manifest Include="$(ApplicationManifest)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+    <ProjectCapability Include="Msix" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CommandPalette.Extensions" Version="0.12.260812002" />
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
+    <PackageReference Include="Shmuelie.WinRTServer" Version="2.1.1" />
+
+    <!-- Needed to enable building an MSIX package -->
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools.MSIX" Version="1.7.20250829.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+    <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
+  </PropertyGroup>
+
+</Project>
